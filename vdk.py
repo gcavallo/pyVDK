@@ -16,12 +16,10 @@ _progress = 0
 
 def unpack(filename):
 	"""
-	Unpack VDK file data.
+	Unpacks VDK file to a directory.
 
-	Parameters
-	----------
-	filename : str
-		File name of the VDK.
+	:param filename: file name of the VDK
+	:type filename: str
 	"""
 
 	vdk = open(filename, "rb")
@@ -68,35 +66,30 @@ def unpack(filename):
 
 def pack(directory):
 	"""
-	Pack directory to VDK file.
+	Packs directory into a VDK file.
 
-	Parameters
-	----------
-	d : str
-		Directory name to pack.
+	:param directory: directory name to pack
+	:type directory: str
 	"""
 
 	print("Packing is not implemented yet.")
 
 def info(filename):
 	"""
-	Print VDK file info.
+	Prints VDK file information.
 
-	Parameters
-	----------
-	filename : str
-		File name of the VDK.
+	:param filename: name of file to unpack
+	:type filename: str
+	:returns: (version, _, files, dirs, size, filelist_size)
+	:rtype: (string, int, int, int, int, int)
 	"""
 
 	vdk = open(filename, "rb")
 	h = _header(vdk)
 	vdk.close()
 
-	print("Version: {0}\nFiles: {1}\nDirs: {2}\nSize: {3}" \
-		.format(h[0], h[2], h[3], h[4]))
-
-	if h[0] == "VDISK1.1":
-		print("Filelist size: {0}".format(h[5]))
+	print("Version: {0}\nFiles: {1}\nDirs: {2}\nSize: {3}\nFilelist size: {4}" \
+		.format(h[0], h[2], h[3], h[4], h[5]))
 
 	return h
 
@@ -107,7 +100,7 @@ def _header(vdk):
 	if h[0] == "VDISK1.1":
 		h.append(struct.unpack("<I", vdk.read(4))[0])
 	elif h[0] == "VDISK1.0":
-		h.append(None)
+		h.append(0)
 	else:
 		sys.exit(1)
 
