@@ -2,22 +2,15 @@
 # -*- coding: utf-8 -*-
 
 """
-pyVDK - VDK file toolkit.
+pyVDK - VDK file utility for Python.
 https://github.com/gcavallo/pyVDK/
 
 Copyright (c) 2015 by Gabriel Cavallo
 BSD 3-Clause License http://opensource.org/licenses/BSD-3-Clause
-
-Arguments
----------
-  -c, --compress DIR            Compress DIR to a VDK file.
-  -e, --extract FILE            Extract VDK file.
-  -h, --help                    Print this help message.
-  -i, --info FILE               Print VDK file info.
 """
 
 from __future__ import print_function, division, unicode_literals
-import os, sys, binascii, time, getopt, zlib, struct
+import os, sys, binascii, time, zlib, struct
 
 _progress = 0
 
@@ -136,28 +129,13 @@ def _compress():
 	pass
 
 if __name__ == "__main__":
-	# No arguments
-	if len(sys.argv) == 1:
-		print(__doc__)
-		sys.exit(2)
-
-	# Bad arguments
-	try:
-		opts, args = getopt.getopt(sys.argv[1:], "c:e:hi:", ["compress", "extract", "help", "info"])
-	except getopt.GetoptError:
-		print(__doc__)
-		sys.exit(2)
-
-	# Handle arguments
-	for opt, arg in opts:
-		if opt in ("-h", "--help"):
-			print(__doc__)
-		elif opt in ("-i", "--info"):
-			print("\nInformation: {0} ...\n".format(arg))
-			info(arg)
-		elif opt in ("-c", "--compress"):
-			print("\nPacking: {0} ...\n".format(arg))
-			pack(arg)
-		elif opt in ("-e", "--extract"):
-			print("\nUnpacking: {0} ...\n".format(arg))
-			unpack(arg)
+	import argparse
+	parser = argparse.ArgumentParser(description=__doc__,
+		formatter_class=argparse.RawDescriptionHelpFormatter)
+	parser.add_argument("-c", "--compress", type=pack, metavar="DIR",
+		help="compress DIR to a VDK file.")
+	parser.add_argument("-e", "--extract", type=unpack, metavar="FILE",
+		help="extract VDK file.")
+	parser.add_argument("-i", "--info", type=info, metavar="FILE",
+		help="show VDK file information.")
+	args = parser.parse_args()
